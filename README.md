@@ -14,9 +14,9 @@ A collection of random scripts/tools I made in <a href="https://codedocs.ghtools
 <br />
 <br />
 <h3 align="center">Full List of Tools: </h3>
-<p align="center"><a href="https://github.com/irtsa-dev/greyscript-scripts/blob/main/tools/gainRoot.src">Gain Root</a></p>
-<p align="center"><a href="https://github.com/irtsa-dev/greyscript-scripts/blob/main/tools/numToSprite.src">Num to Sprite</a></p>
-<p align="center"><a href="https://github.com/irtsa-dev/greyscript-scripts/blob/main/tools/progressBar.src">Progress Bar</a></p>
+<p align="center"><a href="https://github.com/irtsa-dev/greyscript-tools/wiki/Gain-Root">Gain Root</a></p>
+<p align="center"><a href="https://github.com/irtsa-dev/greyscript-tools/wiki/Num-to-Sprite">Num to Sprite</a></p>
+<p align="center"><a href="https://github.com/irtsa-dev/greyscript-tools/wiki/Progress-Bar">Progress Bar</a></p>
 <br />
 <br />
 <br />
