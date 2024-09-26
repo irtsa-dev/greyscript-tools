@@ -1,0 +1,50 @@
+__parseStyle = function(style)
+    style = style.split(",")
+    if style[-1] == "" then style.pop
+    if style.len > 3 then return null
+
+    if style.len > 1 then showPercent = {"true":true,"false":false}[style[1]] else showPercent = true
+    if style.len > 2 then encloseBar = {"true":true,"false":false}[style[2]] else encloseBar = true
+    
+    return [style[0][0], style[0][1]] + [style[0].split(style[0][1])[1].to_int] + [showPercent, encloseBar]
+end function
+    
+
+
+
+
+// Style Format : <bar><filler><notches [values between 10-100]>,(true/false to show percent),(true/false on enclosing the bar)
+//   - note that both boolean values for percent and enclosing default to true if not provided.
+//
+// Examples: 
+//     #-20,true,true     will make a bar that looks like : [####----------------] [20%]
+//     # 10,true,true     will make a bar that looks like : [##          ] [20%]
+//     =-20,false,true    will make a bar that looks like : [=====---------------]
+//     = 20,false         will make a bar that looks like : [====                ]
+
+
+progressBar = function(style, value, limit)
+    style = __parseStyle(style)
+
+    percentage = floor(value / limit * 100)
+    value = style[0] * floor(value / limit * style[2])
+    limit = style[1] * (style[2] - value.len)
+
+    bar = value + limit
+    if style[4] then bar = "[" + bar + "]"
+    if style[3] then bar = bar + "   [" + percentage + "%]"
+    
+    return bar
+end function
+
+
+
+loopProgressBar = function(style, func, limit)
+    v = 0
+    for i in range(limit)
+        func
+
+        v = v + 1
+        print(progressBar(style, v, limit), true)
+    end for
+end function

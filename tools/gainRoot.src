@@ -1,0 +1,58 @@
+gainRoot = function(shell)
+    crypto = include_lib("/lib/crypto.so")
+    if not crypto then
+        aptclient = include_lib("aptclient.so")
+        aptclient.update
+        cryptoinstall = aptclient.install("crypto.so")
+        if not cryptoinstall then return null
+        crypto = include_lib("/lib/crypto.so")
+    end if
+
+    victimComputer = shell.host_computer
+    passwordFile = victimComputer.File("/etc/passwd")
+
+    if not passwordFile then return null
+    if not passwordFile.has_permission("r") then return null
+
+    buildPath = ""
+    for folder in victimComputer.File("/home").get_folders
+        if folder.has_permission("w") then
+            buildPath = folder.path
+            break
+        end if
+    end for
+    if not buildPath then return null
+
+    password = crypto.decipher(passwordFile.get_content.split("\n")[0].split(":")[1])
+    
+    Files = ["/i.src", "/i", "/r.src", "/r"]
+    for file in Files
+        if victimComputer.File(buildPath + file) then victimComputer.File(buildPath + file).delete
+    end for
+    victimComputer.touch(buildPath, "i.src")
+    victimComputer.touch(buildPath, "r.src")
+
+    injectCodeInstall = "aptclient = include_lib(""/lib/aptclient.so"")" + char(10) + "aptclient.update" + char(10) + "aptclient.install(""libssh.so"")" + char(10) + "service = include_lib(""/lib/libssh.so"")" + char(10) + "install_service(service)" + char(10) + "service = include_lib(""/lib/libssh.so"")" + char(10) + "start_service(service)"
+    injectCodeRun = "get_shell(""root"",""" + password + """).launch(""" + buildPath + "/i" + """)"
+
+    sourceFileI = victimComputer.File(buildPath + "/i.src")
+    sourceFileR = victimComputer.File(buildPath + "/r.src")
+    sourceFileI.set_content(injectCodeInstall)
+    sourceFileR.set_content(injectCodeRun)
+    buildA = shell.build(buildPath + "/i.src", buildPath)
+    buildB = shell.build(buildPath + "/r.src", buildPath)
+    if buildA or buildB then return null
+
+    binaryFileI = victimComputer.File(buildPath + "/i")
+    binaryFileR = victimComputer.File(buildPath + "/r")
+
+    shell.launch(buildPath + "/r")
+    connection = shell.connect_service(victimComputer.local_ip, 22, "root", password)
+    if not typeof(connection) == "shell" then return null
+
+    sourceFileI.delete
+    sourceFileR.delete
+    binaryFileI.delete
+    binaryFileR.delete
+    return connection
+end function

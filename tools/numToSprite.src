@@ -1,0 +1,74 @@
+//Imports bltings (https://github.com/irtsa-dev/builtin-greyscript)
+import_code("/bin/bltings")
+
+
+
+
+
+//Necessary separation of the lfill function from String class. (custom)
+__lfill = function(string)
+    return ("0" * [0, 3 - string.len]).max + string
+end function
+
+
+
+
+
+//Public Functions
+monoSprite = function(filepath, zeroIsInvisible = true)
+    file = get_shell.host_computer.File(filepath)
+    if not file then exit("<color=red>Error: File does not exist.")
+    
+    imageData = file.get_content.split("\n")
+    imageSize = imageData[-1].to_int
+    imageData.pop
+
+    for i in range(imageData.len - 1)
+        imageData[i] = imageData[i].group(3)
+        if imageData[i][-1].len < 3 then exit("<color=red>Error: Could not correctly parse image data in file.")
+    end for
+
+    picture = ""
+    for a in range(0, imageData.len - 1)
+        for b in range(0, imageData[a].len - 1)
+            color = hex(imageData[a][b])
+            if color == "0" and zeroIsInvisible then color = "0b0b0c" else color = color + color * (6 / color.len)
+            picture = picture + "<pos=" + floor(b * (imageSize * 0.6)) + "px><size=" + imageSize + "><sprite=0 color=#" + color + ">"
+        end for
+        picture = picture + "<voffset=-" + floor((a + 1) * imageSize * 1.2) + "px>"
+    end for
+    
+    return picture
+end function
+
+
+
+rgbSprite = function(filepath, zeroIsInvisible = true)
+    file = get_shell.host_computer.File(filepath)
+    if not file then exit("<color=red>Error: File does not exist.")
+    
+    imageData = file.get_content.split("\n")
+    imageSize = imageData[-1].to_int
+    imageData.pop
+
+    for i in range(imageData.len - 1)
+        imageData[i] = imageData[i].group(9)
+        if imageData[i][-1].len < 9 then exit("<color=red>Error: Could not correctly parse image data in file.")
+    end for
+
+    picture = ""
+    for a in range(0, imageData.len - 1)
+        for b in range(0, imageData[a].len - 1)
+            color = imageData[a][b].group(3)
+            if color[-1].len < 3 then exit("<color=red>Error: Could not correctly parse image data in file.")
+            color.applyFunction(@hex)
+            color.applyFunction(@__lfill)
+            color = color.join("")
+            if color == "000000" and zeroIsInvisible then color = "0b0b0c"
+            picture = picture + "<pos=" + floor(b * imageSize * 0.6) + "px><size=" + imageSize + "><sprite=0 color=#" + color + ">"
+        end for
+        picture = picture + "<voffset=-" + floor((a + 1) * imageSize * 1.2) + "px>"
+    end for
+    
+    return picture
+end function
