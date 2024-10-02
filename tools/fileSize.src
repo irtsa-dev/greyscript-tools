@@ -3,7 +3,6 @@ fileSize = function(filename)
     for i in range(0, filename.len - 1)
         num = num + (filename[i].code * (i + 1))
     end for
-
     num = floor(110000 + 6990000 * (num % 1000 / 1000)) + num % 10
 
     Names = ["b", "Kb", "Mb", "Gb"]
