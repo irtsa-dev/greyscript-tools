@@ -1,7 +1,7 @@
 <h1 align="center"><b>greyscript-tools</b></h1>
 <p align="center">
-<a href="https://github.com/irtsa-dev/greyscript-tools/releases/tag/v1.2.0">
-        <img src="https://img.shields.io/badge/release-1.2.0-brightgreen"
+<a href="https://github.com/irtsa-dev/greyscript-tools/releases/tag/v1.2.1">
+        <img src="https://img.shields.io/badge/release-1.2.1-brightgreen"
             alt="release"></a>
 <a href="https://github.com/irtsa-dev/builtin-greyscript/issues">
         <img src="https://custom-icon-badges.demolab.com/github/issues-raw/irtsa-dev/builtin-greyscript?logo=issue"
