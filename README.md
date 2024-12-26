@@ -29,7 +29,7 @@ A collection of random scripts/tools I made in <a href="https://codedocs.ghtools
 <h2 align="center">Installation</h2>
 <h3 align="center">For Importing</h3>
 <p align="center">
-To install a tool to later have the code be imported, you must first chose the tool you wish to install (full list above or see <a href="https://github.com/irtsa-dev/greyscript-scripts/blob/main/tools">Progress Bar</a>). After you have chosen your tool you may copy the code and paste it into an open <b>Code Editor</b> process in-game. Once done, you must save this to <code>/bin</code> as <code>(tool-name)</code> <i>(or optionally any path and name you will later remember)</i> making sure to enable <b>Allow import</b>. Once you have done this, you may now utilize <code>import_code("/bin/(tool-name)")</code> or if you haven't saved it as recommended then <code>import_code("(path-to-file)")</code> at the top of any file that you wish to use the tool in.
+To install a tool to later have the code be imported, you must first chose the tool you wish to install (full list above or see <a href="https://github.com/irtsa-dev/greyscript-scripts/blob/main/tools">Tools</a>). After you have chosen your tool you may copy the code and paste it into an open <b>Code Editor</b> process in-game. Once done, you must save this to <code>/bin</code> as <code>(tool-name)</code> <i>(or optionally any path and name you will later remember)</i> making sure to enable <b>Allow import</b>. Once you have done this, you may now utilize <code>import_code("/bin/(tool-name)")</code> or if you haven't saved it as recommended then <code>import_code("(path-to-file)")</code> at the top of any file that you wish to use the tool in.
 </p>
 <br />
 <h3 align="center">Copy+Paste</h3>
