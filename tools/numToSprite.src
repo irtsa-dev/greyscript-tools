@@ -1,5 +1,20 @@
-//Imports bltings (https://github.com/irtsa-dev/builtin-greyscript)
-import_code("/bin/bltings")
+//Additional Functions (from bltings)
+list.applyFunction = function(func)
+    for i in range(self.len - 1)
+        self[i] = func(self[i])
+    end for
+    return self
+end function
+
+
+
+string.group = function(groupsize)
+    strings = []
+    for i in range(0, str(self).len, groupsize)
+        strings.push(str(self)[i : [i + groupsize, str(self).len].min])
+    end for
+    return strings
+end function
 
 
 
