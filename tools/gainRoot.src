@@ -22,37 +22,26 @@ gainRoot = function(shell)
         end if
     end for
     if not buildPath then return null
-
-    password = crypto.decipher(passwordFile.get_content.split("\n")[0].split(":")[1])
     
-    Files = ["/i.src", "/i", "/r.src", "/r"]
-    for file in Files
-        if victimComputer.File(buildPath + file) then victimComputer.File(buildPath + file).delete
-    end for
+    if passwordFile.get_content.hasIndex("root") then password = crypto.decipher(passwordFile.get_content.split("\n")[0].split(":")[1]) else return null
+    
+
     victimComputer.touch(buildPath, "i.src")
     victimComputer.touch(buildPath, "r.src")
+    victimComputer.File(buildPath + "/i.src").set_content("aptclient = include_lib(""/lib/aptclient.so"")" + char(10) + "aptclient.update" + char(10) + "install_service(service)" + char(10) + "service = include_lib(""/lib/libssh.so"")" + char(10) + "start_service(service)")
+    victimComputer.File(buildPath + "/r.src").set_content("get_shell(""root"",""" + password + """).launch(""" + buildPath + "/i" + """)")
 
-    injectCodeInstall = "aptclient = include_lib(""/lib/aptclient.so"")" + char(10) + "aptclient.update" + char(10) + "aptclient.install(""libssh.so"")" + char(10) + "service = include_lib(""/lib/libssh.so"")" + char(10) + "install_service(service)" + char(10) + "service = include_lib(""/lib/libssh.so"")" + char(10) + "start_service(service)"
-    injectCodeRun = "get_shell(""root"",""" + password + """).launch(""" + buildPath + "/i" + """)"
-
-    sourceFileI = victimComputer.File(buildPath + "/i.src")
-    sourceFileR = victimComputer.File(buildPath + "/r.src")
-    sourceFileI.set_content(injectCodeInstall)
-    sourceFileR.set_content(injectCodeRun)
     buildA = shell.build(buildPath + "/i.src", buildPath)
     buildB = shell.build(buildPath + "/r.src", buildPath)
     if buildA or buildB then return null
-
-    binaryFileI = victimComputer.File(buildPath + "/i")
-    binaryFileR = victimComputer.File(buildPath + "/r")
 
     shell.launch(buildPath + "/r")
     connection = shell.connect_service(victimComputer.local_ip, 22, "root", password)
     if not typeof(connection) == "shell" then return null
 
-    sourceFileI.delete
-    sourceFileR.delete
-    binaryFileI.delete
-    binaryFileR.delete
+    for file in ["/i.src", "/r.src", "/i", "/r"]
+        victimComputer.File(buildPath + file).delete
+    end for
+
     return connection
 end function
