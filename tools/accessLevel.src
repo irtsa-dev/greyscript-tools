@@ -1,0 +1,35 @@
+toFolder = function(file, folderpath)
+    while file.path != "/"
+        file = file.parent
+    end while
+
+    for item in folderpath.split("/")
+        for itempath in file.get_folders
+            if itempath.path.split("/")[-1] == item then
+                file = itempath
+                break
+            end if
+        end for
+        if file.path.split("/")[-1] != item then return null
+    end for
+
+    return file
+end function
+
+
+
+accessLevel = function(result)
+    if typeof(result) == "computer" then return accessLevel(result.File("/"))
+    if typeof(result) == "shell" then return accessLevel(result.host_computer.File("/"))
+    if typeof(result) == "file" then
+        if toFolder(result, "/etc").set_owner("root") == "" then return "root"
+        for user in toFolder(result, "/home").get_folders
+            if ["root", "guest"].indexOf(user.path.split("/")[-1]) == null then
+                if user.has_permission("r") then return "user"
+            end if
+        end for
+        return "guest"
+    end if
+
+    return "unknown"
+end function
